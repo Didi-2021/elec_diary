@@ -134,7 +134,6 @@ class Ui_AdminWindow(object):
         self.exitButton = QtWidgets.QPushButton(parent=self.AdminWindow)
         self.exitButton.setGeometry(QtCore.QRect(420, 10, 161, 21))
         self.exitButton.setObjectName("exitButton")
-        self.exitButton.clicked.connect(self.openAuthWindow)
 
         self.retranslateUi(self.AdminWindow)
         self.adminTabWidget.setCurrentIndex(0)
@@ -164,28 +163,3 @@ class Ui_AdminWindow(object):
         self.adminLabel.setText(_translate("AdminWindow", "admin"))
         self.exitButton.setText(_translate("AdminWindow", "Выйти из ученой записи"))
 
-    def openAuthWindow(self):
-        global authWindowDialog
-        global authWindowUi
-
-        authWindowDialog = QtWidgets.QDialog()
-        authWindowUi = AuthorizationWindow()
-        authWindowUi.setupUi(authWindowDialog)
-
-
-
-        authWindowDialog.show()
-
-
-
-# if __name__ == "__main__":
-#     import sys
-#     app = QtWidgets.QApplication(sys.argv)
-#
-#     adminWindowDialog = QtWidgets.QDialog()
-#     adminWindowUi = AdminWindow()
-#     adminWindowUi.setupUi(adminWindowDialog)
-#
-#     adminWindowDialog.show()
-#
-#     sys.exit(app.exec())

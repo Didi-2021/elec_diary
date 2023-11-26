@@ -23,3 +23,6 @@ def login(log, passwrd, textSignal, nextWindowSignal):
         nextWindowSignal.emit(log)
     else:
         textSignal.emit('Проверьте правильность введенных данных')
+
+
+
