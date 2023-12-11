@@ -1,219 +1,301 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
+from PyQt6.QtWidgets import QAbstractItemView
+
+import dbHandler
 
 
 class Ui_StudentWindow(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(777, 601)
+
+    def addLessonRecord(self):
+        self.lessonTableModel.insertRow(self.lessonTableModel.rowCount())
+
+    def deleteLessonRecord(self):
+        self.lessonTableModel.removeRow(self.tableView.currentIndex().row())
+        self.lessonTableModel.select()
+
+    def setupUi(self, student_window_dialog):
+        student_window_dialog.setObjectName("student_window_dialog")
+        student_window_dialog.resize(961, 561)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
-        Dialog.setSizePolicy(sizePolicy)
-        self.gridLayoutWidget = QtWidgets.QWidget(parent=Dialog)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(28, 70, 721, 471))
-        self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-        self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout.setObjectName("gridLayout")
-        self.frame_2 = QtWidgets.QFrame(parent=self.gridLayoutWidget)
-        self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_2.setObjectName("frame_2")
-        self.label_4 = QtWidgets.QLabel(parent=self.frame_2)
-        self.label_4.setGeometry(QtCore.QRect(40, 0, 141, 16))
-        self.label_4.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_4.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
-        self.label_4.setLineWidth(1)
-        self.label_4.setMidLineWidth(0)
-        self.label_4.setScaledContents(False)
-        self.label_4.setObjectName("label_4")
-        self.tableView = QtWidgets.QTableView(parent=self.frame_2)
-        self.tableView.setGeometry(QtCore.QRect(5, 20, 350, 120))
-        self.tableView.setObjectName("tableView")
-        self.label_12 = QtWidgets.QLabel(parent=self.frame_2)
-        self.label_12.setGeometry(QtCore.QRect(10, 0, 21, 16))
-        self.label_12.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_12.setObjectName("label_12")
-        self.gridLayout.addWidget(self.frame_2, 0, 0, 1, 1)
-        self.frame_3 = QtWidgets.QFrame(parent=self.gridLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
-        self.frame_3.setSizePolicy(sizePolicy)
-        self.frame_3.setAutoFillBackground(False)
-        self.frame_3.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_3.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_3.setObjectName("frame_3")
-        self.label_6 = QtWidgets.QLabel(parent=self.frame_3)
-        self.label_6.setGeometry(QtCore.QRect(40, 0, 141, 16))
-        self.label_6.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_6.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
-        self.label_6.setLineWidth(1)
-        self.label_6.setMidLineWidth(0)
-        self.label_6.setScaledContents(False)
-        self.label_6.setObjectName("label_6")
-        self.tableView_3 = QtWidgets.QTableView(parent=self.frame_3)
-        self.tableView_3.setGeometry(QtCore.QRect(5, 20, 350, 120))
-        self.tableView_3.setObjectName("tableView_3")
-        self.label_11 = QtWidgets.QLabel(parent=self.frame_3)
-        self.label_11.setGeometry(QtCore.QRect(10, 0, 21, 16))
-        self.label_11.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_11.setObjectName("label_11")
-        self.gridLayout.addWidget(self.frame_3, 2, 0, 1, 1)
-        self.frame = QtWidgets.QFrame(parent=self.gridLayoutWidget)
-        self.frame.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
-        self.frame.setSizePolicy(sizePolicy)
-        self.frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame.setObjectName("frame")
-        self.label_9 = QtWidgets.QLabel(parent=self.frame)
-        self.label_9.setGeometry(QtCore.QRect(40, 0, 141, 16))
-        self.label_9.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_9.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
-        self.label_9.setLineWidth(1)
-        self.label_9.setMidLineWidth(0)
-        self.label_9.setScaledContents(False)
-        self.label_9.setObjectName("label_9")
-        self.tableView_4 = QtWidgets.QTableView(parent=self.frame)
-        self.tableView_4.setGeometry(QtCore.QRect(0, 20, 350, 120))
-        self.tableView_4.setObjectName("tableView_4")
-        self.label_13 = QtWidgets.QLabel(parent=self.frame)
-        self.label_13.setGeometry(QtCore.QRect(10, 0, 21, 16))
-        self.label_13.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_13.setObjectName("label_13")
-        self.gridLayout.addWidget(self.frame, 0, 1, 1, 1)
-        self.frame_4 = QtWidgets.QFrame(parent=self.gridLayoutWidget)
-        self.frame_4.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_4.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_4.setObjectName("frame_4")
-        self.label_5 = QtWidgets.QLabel(parent=self.frame_4)
-        self.label_5.setGeometry(QtCore.QRect(40, 0, 141, 16))
-        self.label_5.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_5.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
-        self.label_5.setLineWidth(1)
-        self.label_5.setMidLineWidth(0)
-        self.label_5.setScaledContents(False)
-        self.label_5.setObjectName("label_5")
-        self.tableView_2 = QtWidgets.QTableView(parent=self.frame_4)
-        self.tableView_2.setGeometry(QtCore.QRect(5, 20, 350, 120))
-        self.tableView_2.setObjectName("tableView_2")
-        self.label_10 = QtWidgets.QLabel(parent=self.frame_4)
-        self.label_10.setGeometry(QtCore.QRect(10, 0, 21, 16))
-        self.label_10.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_10.setObjectName("label_10")
-        self.gridLayout.addWidget(self.frame_4, 1, 0, 1, 1)
-        self.frame_5 = QtWidgets.QFrame(parent=self.gridLayoutWidget)
-        self.frame_5.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_5.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_5.setObjectName("frame_5")
-        self.label_8 = QtWidgets.QLabel(parent=self.frame_5)
-        self.label_8.setGeometry(QtCore.QRect(40, 0, 141, 16))
-        self.label_8.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_8.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
-        self.label_8.setLineWidth(1)
-        self.label_8.setMidLineWidth(0)
-        self.label_8.setScaledContents(False)
-        self.label_8.setObjectName("label_8")
-        self.tableView_5 = QtWidgets.QTableView(parent=self.frame_5)
-        self.tableView_5.setGeometry(QtCore.QRect(0, 20, 350, 120))
-        self.tableView_5.setObjectName("tableView_5")
-        self.label_14 = QtWidgets.QLabel(parent=self.frame_5)
-        self.label_14.setGeometry(QtCore.QRect(10, 0, 21, 16))
-        self.label_14.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_14.setObjectName("label_14")
-        self.gridLayout.addWidget(self.frame_5, 1, 1, 1, 1)
-        self.frame_6 = QtWidgets.QFrame(parent=self.gridLayoutWidget)
-        self.frame_6.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_6.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_6.setObjectName("frame_6")
-        self.label_7 = QtWidgets.QLabel(parent=self.frame_6)
-        self.label_7.setGeometry(QtCore.QRect(40, 0, 141, 16))
-        self.label_7.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_7.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
-        self.label_7.setLineWidth(1)
-        self.label_7.setMidLineWidth(0)
-        self.label_7.setScaledContents(False)
-        self.label_7.setObjectName("label_7")
-        self.tableView_6 = QtWidgets.QTableView(parent=self.frame_6)
-        self.tableView_6.setGeometry(QtCore.QRect(0, 20, 350, 120))
-        self.tableView_6.setObjectName("tableView_6")
-        self.label_16 = QtWidgets.QLabel(parent=self.frame_6)
-        self.label_16.setGeometry(QtCore.QRect(10, 0, 21, 16))
-        self.label_16.setFrameShape(QtWidgets.QFrame.Shape.Box)
-        self.label_16.setObjectName("label_16")
-        self.gridLayout.addWidget(self.frame_6, 2, 1, 1, 1)
-        self.horizontalLayoutWidget = QtWidgets.QWidget(parent=Dialog)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(30, 30, 361, 31))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label = QtWidgets.QLabel(parent=self.horizontalLayoutWidget)
-        self.label.setObjectName("label")
-        self.horizontalLayout_2.addWidget(self.label)
-        self.label_2 = QtWidgets.QLabel(parent=self.horizontalLayoutWidget)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_2.addWidget(self.label_2)
-        self.label_3 = QtWidgets.QLabel(parent=self.horizontalLayoutWidget)
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayout_2.addWidget(self.label_3)
-        self.horizontalLayout.addLayout(self.horizontalLayout_2)
-        self.pushButton = QtWidgets.QPushButton(parent=Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(610, 32, 141, 31))
+        sizePolicy.setHeightForWidth(student_window_dialog.sizePolicy().hasHeightForWidth())
+        student_window_dialog.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Verdana")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        student_window_dialog.setFont(font)
+        student_window_dialog.setStyleSheet("font: 12pt \"Verdana\";")
+        self.pushButton = QtWidgets.QPushButton(parent=student_window_dialog)
+        self.pushButton.setGeometry(QtCore.QRect(740, 15, 191, 31))
+        self.pushButton.setStyleSheet("border-radius: 5px; \n"
+                                      "font: 75 12pt \"Verdana\";\n"
+                                      "color: rgb(255, 255, 255);\n"
+                                      "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+                                      "border: 1px solid rgb(0, 0, 0);")
         self.pushButton.setObjectName("pushButton")
-        self.dateEdit = QtWidgets.QDateEdit(parent=Dialog)
-        self.dateEdit.setGeometry(QtCore.QRect(320, 550, 140, 30))
+        self.class_frame = QtWidgets.QFrame(parent=student_window_dialog)
+        self.class_frame.setGeometry(QtCore.QRect(460, 95, 141, 31))
+        self.class_frame.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
+        self.class_frame.setStyleSheet(
+            "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "color: rgb(255, 255, 255);\n"
+            "border: 1px solid rgb(0, 0, 0);\n"
+            "border-radius: 5px;")
+        self.class_frame.setFrameShape(QtWidgets.QFrame.Shape.Box)
+        self.class_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.class_frame.setObjectName("class_frame")
+        self.class_label = QtWidgets.QLabel(parent=self.class_frame)
+        self.class_label.setGeometry(QtCore.QRect(6, 5, 61, 21))
+        font = QtGui.QFont()
+        font.setFamily("Verdana")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.class_label.setFont(font)
+        self.class_label.setStyleSheet(
+            "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "color: rgb(255, 255, 255);\n"
+            "border: 1px qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "")
+        self.class_label.setObjectName("class_label")
+        self.class_combobox = QtWidgets.QComboBox(parent=self.class_frame)
+        self.class_combobox.setGeometry(QtCore.QRect(60, 5, 71, 22))
+        self.class_combobox.setObjectName("class_combobox")
+        self.class_combobox.activated.connect(self.set_class_filter)
+        self.student_name = QtWidgets.QLabel(parent=student_window_dialog)
+        self.student_name.setGeometry(QtCore.QRect(30, 15, 411, 31))
+        self.student_name.setStyleSheet(
+            "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "color: rgb(255, 255, 255);\n"
+            "border: 1px solid rgb(0, 0, 0);\n"
+            "border-radius: 5px;")
+        self.student_name.setObjectName("student_name")
+        self.subject_frame = QtWidgets.QFrame(parent=student_window_dialog)
+        self.subject_frame.setGeometry(QtCore.QRect(30, 55, 411, 31))
+        self.subject_frame.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
+        self.subject_frame.setStyleSheet(
+            "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "color: rgb(255, 255, 255);\n"
+            "border: 1px solid rgb(0, 0, 0);\n"
+            "border-radius: 5px;")
+        self.subject_frame.setFrameShape(QtWidgets.QFrame.Shape.Box)
+        self.subject_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.subject_frame.setObjectName("subject_frame")
+        self.subject_label = QtWidgets.QLabel(parent=self.subject_frame)
+        self.subject_label.setGeometry(QtCore.QRect(10, 5, 71, 21))
+        font = QtGui.QFont()
+        font.setFamily("Verdana")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.subject_label.setFont(font)
+        self.subject_label.setStyleSheet(
+            "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "color: rgb(255, 255, 255);\n"
+            "border: 1px qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "")
+        self.subject_label.setObjectName("subject_label")
+        self.subject_combobox = QtWidgets.QComboBox(parent=self.subject_frame)
+        self.subject_combobox.setGeometry(QtCore.QRect(90, 5, 311, 22))
+        self.subject_combobox.setObjectName("subject_combobox")
+        self.subject_combobox.activated.connect(self.set_subject_filter)
+        self.dateEdit = QtWidgets.QDateEdit(QtCore.QDate(2023, 12, 1), parent=student_window_dialog)
+        self.dateEdit.setGeometry(QtCore.QRect(460, 55, 141, 31))
         self.dateEdit.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
         self.dateEdit.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.PreventContextMenu)
         self.dateEdit.setAcceptDrops(False)
+        self.dateEdit.setStyleSheet("border-radius: 5px; \n"
+                                    "color: rgb(255, 255, 255);\n"
+                                    "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+                                    "border: 1px solid rgb(0, 0, 0);")
         self.dateEdit.setCurrentSection(QtWidgets.QDateTimeEdit.Section.DaySection)
         self.dateEdit.setCalendarPopup(True)
         self.dateEdit.setCurrentSectionIndex(0)
         self.dateEdit.setTimeSpec(QtCore.Qt.TimeSpec.LocalTime)
         self.dateEdit.setObjectName("dateEdit")
-        self.pushButton_2 = QtWidgets.QPushButton(parent=Dialog)
-        self.pushButton_2.setGeometry(QtCore.QRect(630, 550, 120, 30))
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_3 = QtWidgets.QPushButton(parent=Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(30, 550, 120, 30))
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.line = QtWidgets.QFrame(parent=Dialog)
-        self.line.setGeometry(QtCore.QRect(30, 56, 361, 20))
-        self.line.setLineWidth(3)
-        self.line.setFrameShape(QtWidgets.QFrame.Shape.HLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.line.setObjectName("line")
+        self.dateEdit.dateChanged.connect(self.set_date_filter)
+        self.student_frame = QtWidgets.QFrame(parent=student_window_dialog)
+        self.student_frame.setGeometry(QtCore.QRect(30, 95, 411, 31))
+        self.student_frame.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
+        self.student_frame.setStyleSheet(
+            "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "color: rgb(255, 255, 255);\n"
+            "border: 1px solid rgb(0, 0, 0);\n"
+            "border-radius: 5px;")
+        self.student_frame.setFrameShape(QtWidgets.QFrame.Shape.Box)
+        self.student_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.student_frame.setObjectName("student_frame")
+        self.student_label = QtWidgets.QLabel(parent=self.student_frame)
+        self.student_label.setGeometry(QtCore.QRect(10, 5, 71, 21))
+        font = QtGui.QFont()
+        font.setFamily("Verdana")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.student_label.setFont(font)
+        self.student_label.setStyleSheet(
+            "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "color: rgb(255, 255, 255);\n"
+            "border: 1px qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
+            "")
+        self.student_label.setObjectName("student_label")
+        self.student_combobox = QtWidgets.QComboBox(parent=self.student_frame)
+        self.student_combobox.setGeometry(QtCore.QRect(90, 5, 311, 22))
+        self.student_combobox.setObjectName("student_combobox")
+        self.student_combobox.activated.connect(self.set_student_filter)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.log_table_widget = QtWidgets.QTableWidget(parent=student_window_dialog)
+        self.log_table_widget.setGeometry(QtCore.QRect(30, 140, 901, 391))
+        font = QtGui.QFont()
+        font.setFamily("Verdana")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(9)
+        self.log_table_widget.setFont(font)
+        self.log_table_widget.setStyleSheet("font: 75 10pt \"Verdana\";")
+        self.log_table_widget.setObjectName("log_table_widget")
+        self.lessonTableModel = QtSql.QSqlTableModel(parent=self.log_table_widget)
+        self.lessonTableModel.setTable('lessons')
+        self.lessonTableModel.setSort(0, QtCore.Qt.SortOrder.AscendingOrder)
+        self.lessonTableModel.select()
+        self.lessonTableModel.setHeaderData(0, QtCore.Qt.Orientation.Horizontal, 'Дата')
+        self.lessonTableModel.setHeaderData(1, QtCore.Qt.Orientation.Horizontal, 'Ученик')
+        self.lessonTableModel.setHeaderData(2, QtCore.Qt.Orientation.Horizontal, 'Класс')
+        self.lessonTableModel.setHeaderData(3, QtCore.Qt.Orientation.Horizontal, 'Родитель')
+        self.lessonTableModel.setHeaderData(4, QtCore.Qt.Orientation.Horizontal, 'Учитель')
+        self.lessonTableModel.setHeaderData(5, QtCore.Qt.Orientation.Horizontal, 'Предмет')
+        self.lessonTableModel.setHeaderData(6, QtCore.Qt.Orientation.Horizontal, 'Оценка')
+        self.tableView = QtWidgets.QTableView(parent=self.log_table_widget)
+        self.tableView.setStyleSheet("border: 1px solid rgb(0, 0, 0);")
+        self.tableView.setObjectName("tableView")
+        self.tableView.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.tableView.setModel(self.lessonTableModel)
+        self.tableView.setGeometry(QtCore.QRect(0, 0, 901, 391))
+        self.tableView.setColumnWidth(2, 100)
+        self.tableView.setColumnWidth(3, 190)
+        self.tableView.setColumnWidth(5, 190)
+        self.tableView.setColumnWidth(6, 100)
 
-    def retranslateUi(self, Dialog):
+        self.deleteLessonButton = QtWidgets.QPushButton(parent=student_window_dialog)
+        self.deleteLessonButton.setGeometry(QtCore.QRect(740, 95, 191, 31))
+        self.deleteLessonButton.setStyleSheet("border-radius: 2px; \n"
+                                              "font: 75 10pt \"Verdana\";\n"
+                                              "color: rgb(0, 0, 0);\n"
+                                              "background-color: rgb(240, 240, 240);\n"
+                                              "border: 1px solid rgb(0, 0, 0);")
+        self.deleteLessonButton.setObjectName("deleteLessonButton")
+
+        self.addLessonButton = QtWidgets.QPushButton(parent=student_window_dialog)
+        self.addLessonButton.setGeometry(QtCore.QRect(740, 55, 191, 31))
+        self.addLessonButton.setStyleSheet("border-radius: 2px; \n"
+                                           "font: 75 10pt \"Verdana\";\n"
+                                           "color: rgb(0, 0, 0);\n"
+                                           "background-color: rgb(240, 240, 240);\n"
+                                           "border: 1px solid rgb(0, 0, 0);")
+        self.addLessonButton.setObjectName("addLessonButton")
+
+        self.clearFilterButton = QtWidgets.QPushButton(parent=student_window_dialog)
+        self.clearFilterButton.setGeometry(QtCore.QRect(460, 15, 141, 31))
+        self.clearFilterButton.setStyleSheet("border-radius: 2px; \n"
+                                             "font: 75 10pt \"Verdana\";\n"
+                                             "color: rgb(0, 0, 0);\n"
+                                             "background-color: rgb(240, 240, 240);\n"
+                                             "border: 1px solid rgb(0, 0, 0);")
+        self.clearFilterButton.setObjectName("clearFilterButton")
+        self.clearFilterButton.clicked.connect(self.clearFilter)
+
+        self.retranslateUi(student_window_dialog)
+        QtCore.QMetaObject.connectSlotsByName(student_window_dialog)
+
+    def retranslateUi(self, student_window_dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Дневник"))
-        self.label_4.setText(_translate("Dialog", "Дата"))
-        self.label_12.setText(_translate("Dialog", "Пн"))
-        self.label_6.setText(_translate("Dialog", "Дата"))
-        self.label_11.setText(_translate("Dialog", "Ср"))
-        self.label_9.setText(_translate("Dialog", "Дата"))
-        self.label_13.setText(_translate("Dialog", "Чт"))
-        self.label_5.setText(_translate("Dialog", "Дата"))
-        self.label_10.setText(_translate("Dialog", "Вт"))
-        self.label_8.setText(_translate("Dialog", "Дата"))
-        self.label_14.setText(_translate("Dialog", "Пт"))
-        self.label_7.setText(_translate("Dialog", "Дата"))
-        self.label_16.setText(_translate("Dialog", "Сб"))
-        self.label.setText(_translate("Dialog", "Фамилия"))
-        self.label_2.setText(_translate("Dialog", "Отчество"))
-        self.label_3.setText(_translate("Dialog", "Имя"))
-        self.pushButton.setText(_translate("Dialog", "Выйти из дневника"))
-        self.pushButton_2.setText(_translate("Dialog", "Следующая неделя"))
-        self.pushButton_3.setText(_translate("Dialog", "Предыдущая неделя"))
+        student_window_dialog.setWindowTitle(_translate("student_window_dialog", "Учитель"))
+        self.pushButton.setText(_translate("student_window_dialog", "Сменить профиль"))
+        self.class_label.setText(_translate("student_window_dialog", "Класс"))
+        self.student_name.setText(_translate("student_window_dialog", "ФИО ученика"))
+        self.subject_label.setText(_translate("student_window_dialog", "Предмет"))
+        self.student_label.setText(_translate("student_window_dialog", "Ученик"))
 
+        self.deleteLessonButton.setText(_translate("student_window_dialog", "Удалить Запись"))
+        self.addLessonButton.setText(_translate("student_window_dialog", "Добавить Запись"))
+        self.clearFilterButton.setText(_translate("student_window_dialog", "Сбросить фильтр"))
+
+    def select_student_info(self, name):
+        connection = dbHandler.connectionDb()
+        cursor = connection.cursor()
+
+        student_subjects = []
+        student_students = []
+        student_classes = []
+
+        cursor.execute(f'''
+                    SELECT DISTINCT subject
+                    FROM lessons
+                    WHERE student = "{name}"
+                ;''')
+        value = cursor.fetchall()
+        for i in value:
+            student_subjects.append(i[0])
+
+        cursor.execute(f'''
+                            SELECT DISTINCT student
+                            FROM lessons
+                            WHERE student = "{name}"
+                        ;''')
+        value = cursor.fetchall()
+        for i in value:
+            student_students.append(i[0])
+
+        cursor.execute(f'''
+                                    SELECT DISTINCT class
+                                    FROM lessons
+                                    WHERE student = "{name}"
+                                ;''')
+        value = cursor.fetchall()
+        for i in value:
+            student_classes.append(i[0])
+
+        self.student_name.setText(name)
+        self.subject_combobox.addItems(student_subjects)
+        self.student_combobox.addItems(student_students)
+        self.class_combobox.addItems(student_classes)
+
+    def clearFilter(self):
+        self.lessonTableModel.setFilter(f'student = "{self.student_name.text()}"')
+        self.lessonTableModel.select()
+
+    def set_date_filter(self):
+        self.lessonTableModel.setFilter(f'''
+                    student = "{self.student_name.text()}"
+                    AND date = "{self.dateEdit.date().toPyDate()}"
+                    ''')
+        self.lessonTableModel.select()
+
+    def set_subject_filter(self):
+        self.lessonTableModel.setFilter(f'''
+                    student = "{self.student_name.text()}"
+                    AND subject = "{self.subject_combobox.currentText()}"
+                    ''')
+        self.lessonTableModel.select()
+
+    def set_student_filter(self):
+        self.lessonTableModel.setFilter(f'''
+                    student = "{self.student_name.text()}"
+                    AND student = "{self.student_combobox.currentText()}"
+                    ''')
+        self.lessonTableModel.select()
+
+    def set_class_filter(self):
+        self.lessonTableModel.setFilter(f'''
+                    student = "{self.student_name.text()}"
+                    AND class = "{self.class_combobox.currentText()}"
+                    ''')
+        self.lessonTableModel.select()
