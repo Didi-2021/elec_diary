@@ -61,7 +61,7 @@ class Ui_teacher_window_dialog(object):
         self.class_combobox = QtWidgets.QComboBox(parent=self.class_frame)
         self.class_combobox.setGeometry(QtCore.QRect(60, 5, 71, 22))
         self.class_combobox.setObjectName("class_combobox")
-        self.class_combobox.activated.connect(self.set_class_filter)
+        self.class_combobox.activated.connect(self.use_filter)
         self.teacher_name = QtWidgets.QLabel(parent=teacher_window_dialog)
         self.teacher_name.setGeometry(QtCore.QRect(30, 15, 411, 31))
         self.teacher_name.setStyleSheet("background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
@@ -96,7 +96,7 @@ class Ui_teacher_window_dialog(object):
         self.subject_combobox = QtWidgets.QComboBox(parent=self.subject_frame)
         self.subject_combobox.setGeometry(QtCore.QRect(90, 5, 311, 22))
         self.subject_combobox.setObjectName("subject_combobox")
-        self.subject_combobox.activated.connect(self.set_subject_filter)
+        self.subject_combobox.activated.connect(self.use_filter)
         self.dateEdit = QtWidgets.QDateEdit(QtCore.QDate(2023, 12, 1), parent=teacher_window_dialog)
         self.dateEdit.setGeometry(QtCore.QRect(460, 55, 141, 31))
         self.dateEdit.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
@@ -111,7 +111,6 @@ class Ui_teacher_window_dialog(object):
         self.dateEdit.setCurrentSectionIndex(0)
         self.dateEdit.setTimeSpec(QtCore.Qt.TimeSpec.LocalTime)
         self.dateEdit.setObjectName("dateEdit")
-        self.dateEdit.dateChanged.connect(self.set_date_filter)
         self.student_frame = QtWidgets.QFrame(parent=teacher_window_dialog)
         self.student_frame.setGeometry(QtCore.QRect(30, 95, 411, 31))
         self.student_frame.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
@@ -139,7 +138,7 @@ class Ui_teacher_window_dialog(object):
         self.student_combobox = QtWidgets.QComboBox(parent=self.student_frame)
         self.student_combobox.setGeometry(QtCore.QRect(90, 5, 311, 22))
         self.student_combobox.setObjectName("student_combobox")
-        self.student_combobox.activated.connect(self.set_student_filter)
+        self.student_combobox.activated.connect(self.use_filter)
 
         self.log_table_widget = QtWidgets.QTableWidget(parent=teacher_window_dialog)
         self.log_table_widget.setGeometry(QtCore.QRect(30, 140, 901, 391))
@@ -163,6 +162,8 @@ class Ui_teacher_window_dialog(object):
         self.lessonTableModel.setHeaderData(4, QtCore.Qt.Orientation.Horizontal, 'Учитель')
         self.lessonTableModel.setHeaderData(5, QtCore.Qt.Orientation.Horizontal, 'Предмет')
         self.lessonTableModel.setHeaderData(6, QtCore.Qt.Orientation.Horizontal, 'Оценка')
+        self.lessonTableModel.setHeaderData(7, QtCore.Qt.Orientation.Horizontal, 'Тема занятия')
+        self.lessonTableModel.setHeaderData(8, QtCore.Qt.Orientation.Horizontal, 'Домашнее задание')
         self.tableView = QtWidgets.QTableView(parent=self.log_table_widget)
         self.tableView.setStyleSheet("border: 1px solid rgb(0, 0, 0);")
         self.tableView.setObjectName("tableView")
@@ -172,6 +173,8 @@ class Ui_teacher_window_dialog(object):
         self.tableView.setColumnWidth(3, 190)
         self.tableView.setColumnWidth(5, 190)
         self.tableView.setColumnWidth(6, 100)
+        self.tableView.setColumnWidth(7, 500)
+        self.tableView.setColumnWidth(8, 500)
 
         self.deleteLessonButton = QtWidgets.QPushButton(parent=teacher_window_dialog)
         self.deleteLessonButton.setGeometry(QtCore.QRect(740, 95, 191, 31))
@@ -202,6 +205,10 @@ class Ui_teacher_window_dialog(object):
                                               "border: 1px solid rgb(0, 0, 0);")
         self.clearFilterButton.setObjectName("clearFilterButton")
         self.clearFilterButton.clicked.connect(self.clearFilter)
+        self.date_checkbox = QtWidgets.QCheckBox(parent=teacher_window_dialog)
+        self.date_checkbox.setGeometry(QtCore.QRect(630, 55, 70, 31))
+        self.date_checkbox.setObjectName("date_checkbox")
+        self.date_checkbox.toggled.connect(self.use_filter)
 
         self.retranslateUi(teacher_window_dialog)
         QtCore.QMetaObject.connectSlotsByName(teacher_window_dialog)
@@ -218,6 +225,7 @@ class Ui_teacher_window_dialog(object):
         self.deleteLessonButton.setText(_translate("teacher_window_dialog", "Удалить Запись"))
         self.addLessonButton.setText(_translate("teacher_window_dialog", "Добавить Запись"))
         self.clearFilterButton.setText(_translate("teacher_window_dialog", "Сбросить фильтр"))
+        self.date_checkbox.setText(_translate("teacher_window_dialog", "Дата"))
 
     def select_teacher_info(self, name):
         connection = dbHandler.connectionDb()
@@ -233,6 +241,8 @@ class Ui_teacher_window_dialog(object):
             WHERE teacher = "{name}"
         ;''')
         value = cursor.fetchall()
+
+        teacher_subjects.append('Все предметы')
         for i in value:
             teacher_subjects.append(i[0])
 
@@ -242,6 +252,8 @@ class Ui_teacher_window_dialog(object):
                     WHERE teacher = "{name}"
                 ;''')
         value = cursor.fetchall()
+
+        teacher_students.append('Все ученики')
         for i in value:
             teacher_students.append(i[0])
 
@@ -251,6 +263,8 @@ class Ui_teacher_window_dialog(object):
                             WHERE teacher = "{name}"
                         ;''')
         value = cursor.fetchall()
+
+        teacher_classes.append('Все')
         for i in value:
             teacher_classes.append(i[0])
 
@@ -262,45 +276,24 @@ class Ui_teacher_window_dialog(object):
     def clearFilter(self):
         self.lessonTableModel.setFilter(f'teacher = "{self.teacher_name.text()}"')
         self.lessonTableModel.select()
+        self.date_checkbox.setChecked(False)
 
-    def set_date_filter(self):
-        self.lessonTableModel.setFilter(f'''
-            teacher = "{self.teacher_name.text()}"
-            AND date = "{self.dateEdit.date().toPyDate()}"
-            ''')
+
+    def use_filter(self):
+        s = f'teacher = "{self.teacher_name.text()}"'
+
+        if self.subject_combobox.currentIndex() != 0:
+            s = s + f' AND subject = "{self.subject_combobox.currentText()}"'
+
+        if self.student_combobox.currentIndex() != 0:
+            s = s + f' AND student = "{self.student_combobox.currentText()}"'
+
+        if self.class_combobox.currentIndex() != 0:
+            s = s + f' AND class = "{self.class_combobox.currentText()}"'
+
+        if self.date_checkbox.isChecked():
+            s = s + f' AND date = "{self.dateEdit.date().toPyDate()}"'
+
+        self.lessonTableModel.setFilter(s)
         self.lessonTableModel.select()
 
-    def set_subject_filter(self):
-        self.lessonTableModel.setFilter(f'''
-            teacher = "{self.teacher_name.text()}"
-            AND subject = "{self.subject_combobox.currentText()}"
-            ''')
-        self.lessonTableModel.select()
-
-    def set_student_filter(self):
-        self.lessonTableModel.setFilter(f'''
-            teacher = "{self.teacher_name.text()}"
-            AND student = "{self.student_combobox.currentText()}"
-            ''')
-        self.lessonTableModel.select()
-
-    def set_class_filter(self):
-        self.lessonTableModel.setFilter(f'''
-            teacher = "{self.teacher_name.text()}"
-            AND class = "{self.class_combobox.currentText()}"
-            ''')
-        self.lessonTableModel.select()
-
-    # def show_table(self):
-    #     current_name = self.teacher_name.text()
-    #     current_subject = self.subject_combobox.currentText()
-    #     current_student = self.student_combobox.currentText()
-    #     current_class = self.class_combobox.currentText()
-    #     current_date = self.dateEdit.date().toPyDate()
-    #
-    #     self.lessonTableModel.setFilter(f'''teacher = "{current_name}"'
-    #                                     AND subject = "{current_subject}"'
-    #                                     AND student = "{current_student}"'
-    #                                     AND class = "{current_class}"'
-    #                                     AND date = "{current_date}"''')
-    #     self.lessonTableModel.select()

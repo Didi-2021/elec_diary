@@ -115,6 +115,8 @@ class Ui_AdminWindow(object):
         self.lessonTableModel.setHeaderData(4, QtCore.Qt.Orientation.Horizontal, 'Учитель')
         self.lessonTableModel.setHeaderData(5, QtCore.Qt.Orientation.Horizontal, 'Предмет')
         self.lessonTableModel.setHeaderData(6, QtCore.Qt.Orientation.Horizontal, 'Оценка')
+        self.lessonTableModel.setHeaderData(7, QtCore.Qt.Orientation.Horizontal, 'Тема занятия')
+        self.lessonTableModel.setHeaderData(8, QtCore.Qt.Orientation.Horizontal, 'Домашнее задание')
         self.tableView_2 = QtWidgets.QTableView(parent=self.gridLayoutWidget_2)
         self.tableView_2.setStyleSheet("border: 1px solid rgb(0, 0, 0);")
         self.tableView_2.setObjectName("tableView_2")
@@ -127,6 +129,8 @@ class Ui_AdminWindow(object):
         # self.tableView_2.setColumnWidth(4, 163)
         self.tableView_2.setColumnWidth(5, 180)
         self.tableView_2.setColumnWidth(6, 60)
+        self.tableView_2.setColumnWidth(7, 500)
+        self.tableView_2.setColumnWidth(8, 500)
         self.gridLayout_2.addWidget(self.tableView_2, 0, 0, 1, 1)
         self.addLessonButton = QtWidgets.QPushButton(parent=self.gridLayoutWidget_2)
         self.addLessonButton.setStyleSheet("border-radius: 2px; \n"

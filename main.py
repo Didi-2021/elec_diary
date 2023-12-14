@@ -1,16 +1,15 @@
-import sys, os
+import sys
 from PyQt6.QtWidgets import (
     QApplication,
     QDialog
 )
-from PyQt6 import QtSql, QtCore
 from uiFiles.authWindow import Ui_AuthWindow
 from uiFiles.adminWindow import Ui_AdminWindow
 from uiFiles.teacherWindow import Ui_teacher_window_dialog
 from uiFiles.studentWindow import Ui_StudentWindow
-import dbHandler
+from uiFiles.welcomeWindow import Ui_welcome_window_dialog
+from uiFiles.aboutUsWindow import Ui_about_us_window_dialog
 
-# basedir = os.path.dirname(__file__)
 
 def openNextWindow(login, password, name, role):
     if login == 'а':
@@ -19,8 +18,9 @@ def openNextWindow(login, password, name, role):
         uiAuthWindow.lineEdit.clear()
         uiAuthWindow.lineEdit_2.clear()
 
-        dialogAuthWindow.close()
+        # dialogAuthWindow.close()
         dialogAdminWindow.show()
+        dialogAuthWindow.close()
 
     else:
         # connection = dbHandler.connectionDb()
@@ -36,39 +36,64 @@ def openNextWindow(login, password, name, role):
         if role == 'учитель':
             # uiAuthWindow.message('Вошел учитель')
 
-            dialogAuthWindow.close()
+            # dialogAuthWindow.close()
             uiTeacherWindow.select_teacher_info(name)
             uiTeacherWindow.lessonTableModel.setFilter(f'teacher = "{name}"')
 
             dialogTeacherWindow.show()
+            dialogAuthWindow.close()
 
         else:
             # uiAuthWindow.message('Вошел Родитель')
 
-            dialogAuthWindow.close()
+            # dialogAuthWindow.close()
             uiStudentWindow.select_student_info(name)
             uiStudentWindow.lessonTableModel.setFilter(f'student = "{name}"')
 
             dialogStudentWindow.show()
+            dialogAuthWindow.close()
+
+
+def open_about_us_window():
+    # dialogWelcomeWindow.close()
+    dialogAboutUsWindow.show()
+
+
+def open_auth_window():
+    dialogWelcomeWindow.close()
+    dialogAuthWindow.show()
 
 
 def returnAuthWindow():
     # uiAuthWindow.message('Возвращаемся в окно авторизации')
+    dialogAuthWindow.show()
     dialogAdminWindow.close()
     dialogStudentWindow.close()
     dialogTeacherWindow.close()
-    dialogAuthWindow.show()
+    # dialogAuthWindow.show()
 
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
+    # Окно приветствия
+    dialogWelcomeWindow = QDialog()
+    uiWelcomeWindowDialog = Ui_welcome_window_dialog()
+    uiWelcomeWindowDialog.setupUi(dialogWelcomeWindow)
+    uiWelcomeWindowDialog.about_us_button.clicked.connect(open_about_us_window)
+    uiWelcomeWindowDialog.login_button.clicked.connect(open_auth_window)
+    dialogWelcomeWindow.show()
+
+    # Окно О нас
+    dialogAboutUsWindow = QDialog()
+    uiAboutUsWindow = Ui_about_us_window_dialog()
+    uiAboutUsWindow.setupUi(dialogAboutUsWindow)
+
     # Окно авторизации
     dialogAuthWindow = QDialog()
     uiAuthWindow = Ui_AuthWindow()
     uiAuthWindow.setupUi(dialogAuthWindow)
-    dialogAuthWindow.show()
 
     # Окно админа
     dialogAdminWindow = QDialog()
