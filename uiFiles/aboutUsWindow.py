@@ -40,7 +40,8 @@ class Ui_about_us_window_dialog(object):
         self.image_label.setStyleSheet("border: 1px solid;\n"
 "border-color: rgb(85, 170, 255);")
         self.image_label.setText("")
-        self.image_label.setPixmap(QtGui.QPixmap('../images/image.jpg'))
+        self.image_label.setPixmap(QtGui.QPixmap('image.jpg'))
+        # self.image_label.setPixmap(QtGui.QPixmap('../images/image.jpg'))
         self.image_label.setObjectName("image_label")
         self.label_1 = QtWidgets.QLabel(parent=about_us_window_dialog)
         self.label_1.setGeometry(QtCore.QRect(400, 140, 361, 51))

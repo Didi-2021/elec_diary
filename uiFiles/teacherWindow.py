@@ -2,10 +2,63 @@ from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
 import dbHandler
 
 
+class DataEditDelegate(QtWidgets.QStyledItemDelegate):
+    def createEditor(self, parent, option, index):
+        editor = QtWidgets.QDateEdit(parent)
+        editor.setDate(QtCore.QDate.currentDate())
+        editor.setFrame(False)
+
+        editor.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
+        editor.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.PreventContextMenu)
+        editor.setAcceptDrops(False)
+        editor.setCurrentSection(QtWidgets.QDateTimeEdit.Section.DaySection)
+        editor.setCalendarPopup(True)
+        editor.setCurrentSectionIndex(0)
+        editor.setTimeSpec(QtCore.Qt.TimeSpec.LocalTime)
+
+        return editor
+    def setEditorData(self, editor, index):
+        value = index.model().data(index, QtCore.Qt.ItemDataRole.EditRole)
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(option.rect)
+    def setModelData(self, editor, model, index):
+        value = str(editor.date().toPyDate())
+        model.setData(index, value, QtCore.Qt.ItemDataRole.EditRole)
+
+# class TeacherEditDelegate(QtWidgets.QStyledItemDelegate):
+#     def createEditor(self, parent, option, index):
+#         editor = QtWidgets.QComboBox(parent)
+#         editor.setDate(QtCore.QDate.currentDate())
+#         editor.setFrame(False)
+#
+#         editor.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
+#         editor.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.PreventContextMenu)
+#         editor.setAcceptDrops(False)
+#         editor.setCurrentSection(QtWidgets.QDateTimeEdit.Section.DaySection)
+#         editor.setCalendarPopup(True)
+#         editor.setCurrentSectionIndex(0)
+#         editor.setTimeSpec(QtCore.Qt.TimeSpec.LocalTime)
+#
+#         return editor
+#     def setEditorData(self, editor, index):
+#         value = index.model().data(index, QtCore.Qt.ItemDataRole.EditRole)
+#     def updateEditorGeometry(self, editor, option, index):
+#         editor.setGeometry(option.rect)
+#     def setModelData(self, editor, model, index):
+#         value = str(editor.date().toPyDate())
+#         model.setData(index, value, QtCore.Qt.ItemDataRole.EditRole)
+
 class Ui_teacher_window_dialog(object):
 
     def addLessonRecord(self):
         self.lessonTableModel.insertRow(self.lessonTableModel.rowCount())
+        # row = self.lessonTableModel.rowCount()
+        # self.lessonTableModel.insertRow(row)
+        # if self.tableView.currentIndex().column() == 4:
+        #     rec = self.lessonTableModel.record(row)
+        #     rec.setValue('teacher', self.teacher_name.text())
+        #     self.lessonTableModel.setRecord(row, rec)
+
 
     def deleteLessonRecord(self):
         self.lessonTableModel.removeRow(self.tableView.currentIndex().row())
@@ -175,7 +228,10 @@ class Ui_teacher_window_dialog(object):
         self.tableView.setObjectName("tableView")
         self.tableView.setModel(self.lessonTableModel)
         self.tableView.setGeometry(QtCore.QRect(0, 0, 901, 391))
-        self.tableView.setColumnWidth(2, 100)
+
+        self.tableView.setItemDelegateForColumn(0, DataEditDelegate())
+
+        # self.tableView.setColumnWidth(2, 100)
         self.tableView.setColumnWidth(3, 190)
         self.tableView.setColumnWidth(5, 190)
         self.tableView.setColumnWidth(6, 100)
