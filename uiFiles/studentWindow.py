@@ -243,6 +243,10 @@ class Ui_StudentWindow(object):
         student_students = []
         student_classes = []
 
+        self.subject_combobox.clear()
+        self.student_combobox.clear()
+        self.class_combobox.clear()
+
         cursor.execute(f'''
                     SELECT DISTINCT subject
                     FROM lessons
@@ -283,6 +287,7 @@ class Ui_StudentWindow(object):
 
     def clearFilter(self):
         self.lessonTableModel.setFilter(f'student = "{self.student_name.text()}"')
+        self.select_student_info(self.student_name.text())
         self.lessonTableModel.select()
         self.date_checkbox.setChecked(False)
 
@@ -294,6 +299,8 @@ class Ui_StudentWindow(object):
 
         if self.date_checkbox.isChecked():
             s = s + f' AND date = "{self.dateEdit.date().toPyDate()}"'
+
+        self.select_student_info(self.student_name.text())
 
         self.lessonTableModel.setFilter(s)
         self.lessonTableModel.select()

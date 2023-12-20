@@ -15,6 +15,7 @@ def login(log, passwrd, textSignal, nextWindowSignal):
     connection = connectionDb()
     cursor = connection.cursor()
 
+
     cursor.execute(f'SELECT login, password, name, role  FROM users WHERE login="{log}";')
     value = cursor.fetchall()
 
@@ -23,6 +24,8 @@ def login(log, passwrd, textSignal, nextWindowSignal):
         nextWindowSignal.emit(value[0][0], value[0][1],value[0][2], value[0][3])
     else:
         textSignal.emit('Проверьте правильность введенных данных')
+
+    connection.close()
 
 
 

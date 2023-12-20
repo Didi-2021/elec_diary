@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import (
     QApplication,
     QDialog
 )
+from PyQt6 import QtSql
 from uiFiles.authWindow import Ui_AuthWindow
 from uiFiles.adminWindow import Ui_AdminWindow
 from uiFiles.teacherWindow import Ui_teacher_window_dialog
@@ -13,43 +14,19 @@ from uiFiles.aboutUsWindow import Ui_about_us_window_dialog
 
 def openNextWindow(login, password, name, role):
     if login == 'а':
-        # uiAuthWindow.message('Вошел Админ')
-
         uiAuthWindow.lineEdit.clear()
         uiAuthWindow.lineEdit_2.clear()
-
-        # dialogAuthWindow.close()
         dialogAdminWindow.show()
         dialogAuthWindow.close()
-
     else:
-        # connection = dbHandler.connectionDb()
-        # cursor = connection.cursor()
-        #
-        # cursor.execute(f'''
-        #     SELECT login, password, name
-        #     FROM users
-        #     WHERE login = "{login}"
-        # ;''')
-        # value = cursor.fetchall()
-
         if role == 'учитель':
-            # uiAuthWindow.message('Вошел учитель')
-
-            # dialogAuthWindow.close()
             uiTeacherWindow.select_teacher_info(name)
             uiTeacherWindow.lessonTableModel.setFilter(f'teacher = "{name}"')
-
             dialogTeacherWindow.show()
             dialogAuthWindow.close()
-
         else:
-            # uiAuthWindow.message('Вошел Родитель')
-
-            # dialogAuthWindow.close()
             uiStudentWindow.select_student_info(name)
             uiStudentWindow.lessonTableModel.setFilter(f'student = "{name}"')
-
             dialogStudentWindow.show()
             dialogAuthWindow.close()
 
@@ -65,17 +42,18 @@ def open_auth_window():
 
 
 def returnAuthWindow():
-    # uiAuthWindow.message('Возвращаемся в окно авторизации')
     dialogAuthWindow.show()
     dialogAdminWindow.close()
     dialogStudentWindow.close()
     dialogTeacherWindow.close()
-    # dialogAuthWindow.show()
-
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
+    conn = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+    conn.setDatabaseName('db/database.db')
+    conn.open()
 
     # Окно приветствия
     dialogWelcomeWindow = QDialog()

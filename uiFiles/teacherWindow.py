@@ -10,6 +10,11 @@ class Ui_teacher_window_dialog(object):
     def deleteLessonRecord(self):
         self.lessonTableModel.removeRow(self.tableView.currentIndex().row())
         self.lessonTableModel.select()
+
+    def saveRecord(self):
+        self.lessonTableModel.submitAll()
+        self.select_teacher_info(self.teacher_name.text())
+
     def setupUi(self, teacher_window_dialog):
         teacher_window_dialog.setObjectName("teacher_window_dialog")
         teacher_window_dialog.resize(961, 561)
@@ -97,6 +102,7 @@ class Ui_teacher_window_dialog(object):
         self.subject_combobox.setGeometry(QtCore.QRect(90, 5, 311, 22))
         self.subject_combobox.setObjectName("subject_combobox")
         self.subject_combobox.activated.connect(self.use_filter)
+        # self.subject_combobox.activated.connect(self.select_teacher_info(self.teacher_name.text()))
         self.dateEdit = QtWidgets.QDateEdit(QtCore.QDate(2023, 12, 1), parent=teacher_window_dialog)
         self.dateEdit.setGeometry(QtCore.QRect(460, 55, 141, 31))
         self.dateEdit.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
@@ -197,7 +203,7 @@ class Ui_teacher_window_dialog(object):
         self.addLessonButton.clicked.connect(self.addLessonRecord)
 
         self.clearFilterButton = QtWidgets.QPushButton(parent=teacher_window_dialog)
-        self.clearFilterButton.setGeometry(QtCore.QRect(460, 15, 141, 31))
+        self.clearFilterButton.setGeometry(QtCore.QRect(460, 15, 121, 31))
         self.clearFilterButton.setStyleSheet("border-radius: 2px; \n"
                                               "font: 75 10pt \"Verdana\";\n"
                                               "color: rgb(0, 0, 0);\n"
@@ -205,6 +211,17 @@ class Ui_teacher_window_dialog(object):
                                               "border: 1px solid rgb(0, 0, 0);")
         self.clearFilterButton.setObjectName("clearFilterButton")
         self.clearFilterButton.clicked.connect(self.clearFilter)
+
+        self.saveButton = QtWidgets.QPushButton(parent=teacher_window_dialog)
+        self.saveButton.setGeometry(QtCore.QRect(600, 15, 131, 31))
+        self.saveButton.setStyleSheet("border-radius: 2px; \n"
+                                             "font: 75 10pt \"Verdana\";\n"
+                                             "color: rgb(0, 0, 0);\n"
+                                             "background-color: rgb(240, 240, 240);\n"
+                                             "border: 1px solid rgb(0, 0, 0);")
+        self.saveButton.setObjectName("saveButton")
+        self.saveButton.clicked.connect(self.saveRecord)
+
         self.date_checkbox = QtWidgets.QCheckBox(parent=teacher_window_dialog)
         self.date_checkbox.setGeometry(QtCore.QRect(630, 55, 70, 31))
         self.date_checkbox.setObjectName("date_checkbox")
@@ -225,6 +242,7 @@ class Ui_teacher_window_dialog(object):
         self.deleteLessonButton.setText(_translate("teacher_window_dialog", "Удалить Запись"))
         self.addLessonButton.setText(_translate("teacher_window_dialog", "Добавить Запись"))
         self.clearFilterButton.setText(_translate("teacher_window_dialog", "Сбросить фильтр"))
+        self.saveButton.setText(_translate("teacher_window_dialog", "Сохранить запись"))
         self.date_checkbox.setText(_translate("teacher_window_dialog", "Дата"))
 
     def select_teacher_info(self, name):
@@ -234,6 +252,10 @@ class Ui_teacher_window_dialog(object):
         teacher_subjects = []
         teacher_students = []
         teacher_classes = []
+
+        self.subject_combobox.clear()
+        self.student_combobox.clear()
+        self.class_combobox.clear()
 
         cursor.execute(f'''
             SELECT DISTINCT subject
@@ -275,6 +297,7 @@ class Ui_teacher_window_dialog(object):
 
     def clearFilter(self):
         self.lessonTableModel.setFilter(f'teacher = "{self.teacher_name.text()}"')
+        self.select_teacher_info(self.teacher_name.text())
         self.lessonTableModel.select()
         self.date_checkbox.setChecked(False)
 
@@ -293,6 +316,8 @@ class Ui_teacher_window_dialog(object):
 
         if self.date_checkbox.isChecked():
             s = s + f' AND date = "{self.dateEdit.date().toPyDate()}"'
+
+        self.select_teacher_info(self.teacher_name.text())
 
         self.lessonTableModel.setFilter(s)
         self.lessonTableModel.select()

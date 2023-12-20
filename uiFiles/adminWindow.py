@@ -2,9 +2,6 @@ from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
 
 
 class Ui_AdminWindow(object):
-    conn = QtSql.QSqlDatabase.addDatabase('QSQLITE')
-    conn.setDatabaseName('db/database.db')
-
     def addUserRecord(self):
         self.usersTableModel.insertRow(self.usersTableModel.rowCount())
 
@@ -12,12 +9,8 @@ class Ui_AdminWindow(object):
         self.usersTableModel.removeRow(self.tableView.currentIndex().row())
         self.usersTableModel.select()
 
-    def addLessonRecord(self):
-        self.lessonTableModel.insertRow(self.lessonTableModel.rowCount())
-
-    def deleteLessonRecord(self):
-        self.lessonTableModel.removeRow(self.tableView_2.currentIndex().row())
-        self.lessonTableModel.select()
+    def saveRecord(self):
+        self.usersTableModel.submitAll()
 
     def setupUi(self, adminDialog):
         adminDialog.setObjectName("adminDialog")
@@ -39,8 +32,8 @@ class Ui_AdminWindow(object):
         self.adminTabWidget.setStyleSheet("font: 75 10pt \"Verdana\";")
         self.adminTabWidget.setObjectName("adminTabWidget")
 
-
 ###############################################################################################
+
         self.usersTab = QtWidgets.QWidget()
         self.usersTab.setObjectName("usersTab")
         self.gridLayoutWidget = QtWidgets.QWidget(parent=self.usersTab)
@@ -58,7 +51,9 @@ class Ui_AdminWindow(object):
         self.deleteUserButton.setObjectName("deleteUserButton")
         self.deleteUserButton.clicked.connect(self.deleteUserRecord)
         self.gridLayout.addWidget(self.deleteUserButton, 2, 0, 1, 1)
+
         self.usersTableModel = QtSql.QSqlTableModel(parent=self.gridLayoutWidget)
+        # self.usersTableModel.setEditStrategy(QtSql.QSqlTableModel.EditStrategy.OnManualSubmit)
         self.usersTableModel.setTable('users')
         self.usersTableModel.setSort(0, QtCore.Qt.SortOrder.AscendingOrder)
         self.usersTableModel.select()
@@ -86,63 +81,6 @@ class Ui_AdminWindow(object):
         self.gridLayout.addWidget(self.addUserButton, 1, 0, 1, 1)
         self.adminTabWidget.addTab(self.usersTab, "")
 ###############################################################################################
-###############################################################################################
-        self.lessonsTab = QtWidgets.QWidget()
-        self.lessonsTab.setObjectName("lessonsTab")
-        self.gridLayoutWidget_2 = QtWidgets.QWidget(parent=self.lessonsTab)
-        self.gridLayoutWidget_2.setGeometry(QtCore.QRect(20, 20, 811, 291))
-        self.gridLayoutWidget_2.setObjectName("gridLayoutWidget_2")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.gridLayoutWidget_2)
-        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout_2.setObjectName("gridLayout_2")
-        self.deleteLessonButton = QtWidgets.QPushButton(parent=self.gridLayoutWidget_2)
-        self.deleteLessonButton.setStyleSheet("border-radius: 2px; \n"
-                                            "font: 75 10pt \"Verdana\";\n"
-                                            "color: rgb(0, 0, 0);\n"
-                                            "background-color: rgb(240, 240, 240);\n"
-                                            "border: 1px solid rgb(0, 0, 0);")
-        self.deleteLessonButton.setObjectName("deleteLessonButton")
-        self.deleteLessonButton.clicked.connect(self.deleteLessonRecord)
-        self.gridLayout_2.addWidget(self.deleteLessonButton, 2, 0, 1, 1)
-        self.lessonTableModel = QtSql.QSqlTableModel(parent=self.gridLayoutWidget_2)
-        self.lessonTableModel.setTable('lessons')
-        self.lessonTableModel.setSort(0, QtCore.Qt.SortOrder.AscendingOrder)
-        self.lessonTableModel.select()
-        self.lessonTableModel.setHeaderData(0, QtCore.Qt.Orientation.Horizontal, 'Дата')
-        self.lessonTableModel.setHeaderData(1, QtCore.Qt.Orientation.Horizontal, 'Ученик')
-        self.lessonTableModel.setHeaderData(2, QtCore.Qt.Orientation.Horizontal, 'Класс')
-        self.lessonTableModel.setHeaderData(3, QtCore.Qt.Orientation.Horizontal, 'Родитель')
-        self.lessonTableModel.setHeaderData(4, QtCore.Qt.Orientation.Horizontal, 'Учитель')
-        self.lessonTableModel.setHeaderData(5, QtCore.Qt.Orientation.Horizontal, 'Предмет')
-        self.lessonTableModel.setHeaderData(6, QtCore.Qt.Orientation.Horizontal, 'Оценка')
-        self.lessonTableModel.setHeaderData(7, QtCore.Qt.Orientation.Horizontal, 'Тема занятия')
-        self.lessonTableModel.setHeaderData(8, QtCore.Qt.Orientation.Horizontal, 'Домашнее задание')
-        self.tableView_2 = QtWidgets.QTableView(parent=self.gridLayoutWidget_2)
-        self.tableView_2.setStyleSheet("border: 1px solid rgb(0, 0, 0);")
-        self.tableView_2.setObjectName("tableView_2")
-        self.tableView_2.setModel(self.lessonTableModel)
-        self.tableView_2.setGeometry(QtCore.QRect(0, 0, 150, 100))
-        # self.tableView_2.setColumnWidth(0, 164)
-        # self.tableView_2.setColumnWidth(1, 163)
-        self.tableView_2.setColumnWidth(2, 50)
-        self.tableView_2.setColumnWidth(3, 180)
-        # self.tableView_2.setColumnWidth(4, 163)
-        self.tableView_2.setColumnWidth(5, 180)
-        self.tableView_2.setColumnWidth(6, 60)
-        self.tableView_2.setColumnWidth(7, 500)
-        self.tableView_2.setColumnWidth(8, 500)
-        self.gridLayout_2.addWidget(self.tableView_2, 0, 0, 1, 1)
-        self.addLessonButton = QtWidgets.QPushButton(parent=self.gridLayoutWidget_2)
-        self.addLessonButton.setStyleSheet("border-radius: 2px; \n"
-                                         "font: 75 10pt \"Verdana\";\n"
-                                         "color: rgb(0, 0, 0);\n"
-                                         "background-color: rgb(240, 240, 240);\n"
-                                         "border: 1px solid rgb(0, 0, 0);")
-        self.addLessonButton.setObjectName("addLessonButton")
-        self.addLessonButton.clicked.connect(self.addLessonRecord)
-        self.gridLayout_2.addWidget(self.addLessonButton, 1, 0, 1, 1)
-        self.adminTabWidget.addTab(self.lessonsTab, "")
-###############################################################################################
 
         self.adminLabel = QtWidgets.QLabel(parent=adminDialog)
         self.adminLabel.setGeometry(QtCore.QRect(30, 10, 111, 31))
@@ -164,13 +102,22 @@ class Ui_AdminWindow(object):
         self.adminLabel.setObjectName("adminLabel")
         self.exitButton = QtWidgets.QPushButton(parent=adminDialog)
         self.exitButton.setGeometry(QtCore.QRect(660, 10, 221, 31))
-        # self.exitButton.setGeometry(QtCore.QRect(360, 10, 221, 31))
         self.exitButton.setStyleSheet("border-radius: 5px; \n"
                                       "font: 75 12pt \"Verdana\";\n"
                                       "color: rgb(255, 255, 255);\n"
                                       "background-color: qlineargradient(spread:reflect, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(0, 117, 176, 255), stop:1 rgba(0, 170, 255, 255));\n"
                                       "border: 1px solid rgb(0, 0, 0);")
         self.exitButton.setObjectName("exitButton")
+
+        self.saveButton = QtWidgets.QPushButton(parent=adminDialog)
+        self.saveButton.setGeometry(QtCore.QRect(480, 10, 151, 31))
+        self.saveButton.setStyleSheet("border-radius: 2px; \n"
+                                      "font: 75 10pt \"Verdana\";\n"
+                                      "color: rgb(0, 0, 0);\n"
+                                      "background-color: rgb(240, 240, 240);\n"
+                                      "border: 1px solid rgb(0, 0, 0);")
+        self.saveButton.setObjectName("saveButton")
+        self.saveButton.clicked.connect(self.saveRecord)
 
         self.retranslateUi(adminDialog)
         self.adminTabWidget.setCurrentIndex(0)
@@ -184,11 +131,7 @@ class Ui_AdminWindow(object):
         self.adminTabWidget.setTabText(self.adminTabWidget.indexOf(self.usersTab),
                                        _translate("adminDialog", "Пользователи"))
 
-        self.deleteLessonButton.setText(_translate("adminDialog", "Удалить Запись"))
-        self.addLessonButton.setText(_translate("adminDialog", "Добавить Запись"))
-        self.adminTabWidget.setTabText(self.adminTabWidget.indexOf(self.lessonsTab),
-                                       _translate("adminDialog", "Занятия"))
-
         self.adminLabel.setText(_translate("adminDialog", "admin"))
         self.exitButton.setText(_translate("adminDialog", "Выйти из ученой записи"))
+        self.saveButton.setText(_translate("adminDialog", "Сохранить запись"))
 
